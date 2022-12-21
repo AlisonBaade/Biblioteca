@@ -66,6 +66,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            
+        'libraries':{
+            'filtros': 'livro.templatetags.filtros', # necessário adicionar esse trecho para conseguir importar
+                                                    # os filtros criando dentro de templatetags
+            } 
         },
     },
 ]

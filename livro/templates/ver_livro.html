@@ -1,5 +1,5 @@
 {%extends 'base.html'%}
-
+{% load filtros %} <!-- carregando os filtros -->
 
 {% block 'conteudo' %}
 
@@ -71,7 +71,8 @@
             {% endif %}
             <td>{{i.data_emprestimo}}</td>
             <td>{{i.data_devolucao}}</td>
-            <td></td>
+            <td> {{i.data_devolucao|mostra_duracao:i.data_emprestimo }} Dias</td>
+            <!-- chamo o primeiro parametro do filtro (value1)  | (pipeline) nome da função : segundo parametro (value2) -->
           </tr>
           {%endfor%}
         </tbody>
