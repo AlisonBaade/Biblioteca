@@ -24,44 +24,51 @@
 
 <div class="container">
     <br>
-    <form action="#" method="POST">
+    <form action="{% url 'alterar_livro' %}" method="POST">
         {% csrf_token %}
+        <input type="hidden" value="{{livro.id}}" name="livro_id">
         <p>
             <label>Nome do Livro</label>
-            <input style="width: 40%;" class="form-control" type="text" value="{{livro.nome}}">
+            <input style="width: 40%;" class="form-control" type="text" value="{{livro.nome}}" name="nome_livro">
         </p>
 
         <p>
             <label>Autor</label>
-            <input style="width: 40%;" class="form-control" type="text" value="{{livro.autor}}">
+            <input style="width: 40%;" class="form-control" type="text" value="{{livro.autor}}" name="autor">
         </p>
 
         <p>
             <label>Co-Autor</label>
-            <input style="width: 40%;" class="form-control" type="text" value="{{livro.co_autor}}">
+            <input style="width: 40%;" class="form-control" type="text" value="{{livro.co_autor}}" name="co_autor">
         </p>
 
-        <p>
-            <label>Data de Cadastro</label>
-            <input style="width: 40%;" class="form-control" type="text" value="{{livro.data_cadastro}}">
-        </p>
-
-        <select style="width: 20%;" class="form-control" name="categoria">
+        <label for="">Categoria</label>
+        <select style="width: 20%;" class="form-control" name="categoria_id">
             {% for i in categoria_livro %}
                 {% if livro.categoria.nome == i.nome %}
-                    <option selected>{{i}}</option>
+                    <option value="{{i.id}}" selected>{{i}}</option>
                 {%else%}
-                <option>{{i}}</option>
+                <option value="{{i.id}}">{{i}}</option>
                 {%endif%}
             {%endfor%}
         </select>
         <br>
 
-        <label>Emprestado &nbsp; &nbsp;</label>   <!--tag do django para dar espaço -->
+        <p>
+            <label>Data de Cadastro</label>
+            <p>{{livro.data_cadastro}}</p>
+        </p>
+        <br>
+
+        <label>Emprestado</label>   <!-- &nbsp; tag do django para dar espaço -->
         {% if livro.emprestado %}
-            <input style="transform: scale(2.0);" checked type="checkbox" name="emprestado">
+          <svg style="color: green;" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+          </svg>
         {% else %}
-            <input style="transform: scale(2.0);" type="checkbox" name="emprestado"    >
+          <svg style="color: red;" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
         {% endif %}
         <br>
         <br>
@@ -95,7 +102,7 @@
             {% endif %}
             <td>{{i.data_emprestimo}}</td>
             <td>{{i.data_devolucao}}</td>
-            <td> {{i.data_devolucao|mostra_duracao:i.data_emprestimo }} Dias</td>
+            <td> {{i.data_devolucao|mostra_duracao:i.data_emprestimo }}</td>
             <!-- chamo o primeiro parametro do filtro (value1)  | (pipeline) nome da função : segundo parametro (value2) -->
           </tr>
           {%endfor%}
