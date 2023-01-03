@@ -73,7 +73,8 @@ def ver_livros(request, id):
 
 def cadastrar_livro(request):
     if request.method == 'POST':
-        form = CadastroLivro(request.POST)
+        form = CadastroLivro(request.POST, request.FILES) # request.POST salva cadastro das informações do livro
+                                                        # request.FILES vai salvar os arquivos de imagem
         
         if form.is_valid():
             form.save() # salvando o formulario 
@@ -160,10 +161,16 @@ def seus_emprestimos(request):
     
     usuario = Usuario.objects.get(id = request.session['usuario'])
     emprestimos = Emprestimo.objects.filter(nome_emprestado = usuario)
-    
-    
+    ##### Fazer com que apareça os formularios na tela de emprestimo #####
+    form = CadastroLivro()    
+    form.fields['usuario'].initial = request.session['usuario']
+    form.fields['categoria'].queryset = Categoria.objects.filter(usuario = usuario)    
+    form_categoria = CategoriaLivro()
+    ######################################################################
     return render(request, 'seus_emprestimos.html', {'usuario_logado' : request.session['usuario'],
-                                                     'emprestimos' : emprestimos})
+                                                     'emprestimos' : emprestimos,
+                                                     'form': form,
+                                                     'form_categoria': form_categoria})
     
     
 def processa_avaliacao(request):
@@ -173,7 +180,11 @@ def processa_avaliacao(request):
     id_livro = request.POST.get('id_livro')
     
     emprestimo = Emprestimo.objects.get(id = id_emprestimo)
-    emprestimo.avaliacao = opcoes
-    emprestimo.save()
-
-    return redirect(f'/livro/ver_livro/{id_livro}')
+    
+    # Outro usuario não consegue fazer uma avaliação em um livro q não é dele
+    if emprestimo.livro.usuario.id == request.session['usuario']:   
+        emprestimo.avaliacao = opcoes
+        emprestimo.save()
+        return redirect(f'/livro/ver_livro/{id_livro}')
+    else:
+        return HttpResponse('Esse empréstimo não é seu')

@@ -125,6 +125,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # caminho onde ficara os arquivos, pasta MEDIA, capa_livro criado em models de Livros
+MEDIA_URL = '/media/' # local onde ficara salvo a imagem
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
